@@ -181,7 +181,7 @@ async function doConnect() {
     writer = new ethers.Contract(app.cfg.address, abi, signer);
     reader = new ethers.Contract(app.cfg.address, abi, browserProvider);
     app.connected = true;
-    app.netText = "Sepolia ✓";
+    app.netText = "Sepolia";
     app.netClass = "ok";
     setBanner(null);
 
@@ -213,14 +213,14 @@ async function sendTx(label, fn) {
     tx = await fn();
     setTx("wait", "Darījums nosūtīts, gaida apstiprinājumu blokķēdē…", tx.hash);
     const rc = await tx.wait();
-    setTx("ok", `✓ Darījums apstiprināts blokā ${rc.blockNumber}.`, tx.hash);
+    setTx("ok", `Darījums apstiprināts blokā ${rc.blockNumber}.`, tx.hash);
     return rc;
   } catch (e) {
     const hash = tx?.hash || e.receipt?.hash || e.transaction?.hash;
     if (hash && (e.code === "CALL_EXCEPTION" || e.receipt)) {
-      setTx("bad", "✗ Līgums noraidīja darījumu (revert). Tas ir redzams Etherscan kā neizdevies.", hash);
+      setTx("bad", "Līgums noraidīja darījumu (revert). Tas ir redzams Etherscan kā neizdevies.", hash);
     } else {
-      setTx("bad", "✗ " + prettyError(e), hash);
+      setTx("bad", "" + prettyError(e), hash);
     }
     return null;
   } finally {

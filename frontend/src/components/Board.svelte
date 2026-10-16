@@ -37,7 +37,7 @@
     if (g.status === 3) {
       const iWon = same(g.winner, app.account);
       const text = iWon
-        ? "🏆 Tu uzvarēji!"
+        ? "Tu uzvarēji!"
         : `Uzvarētājs: ${short(g.winner)}${isPlayer ? " — šoreiz zaudēji." : ""}`;
       return { text, cls: "done" };
     }
@@ -58,7 +58,7 @@
         Mačs #{g.id}
         <span class="badge {STATUS_CLASS[g.status]}">{STATUS_LABEL[g.status]}</span>
       </h2>
-      <button class="btn small" onclick={() => refreshGame(true)}>↻ Atjaunot</button>
+      <button class="btn small" onclick={() => refreshGame(true)}>Atjaunot</button>
     </div>
 
     <div class="players">
@@ -116,9 +116,9 @@
         <button class="btn" disabled={app.busy} onclick={cancelGame}>Atcelt maču</button>
       {/if}
       {#if g.status === 3 && isPlayer}
-        <button class="btn primary" disabled={app.busy} onclick={rematch}>🔁 Revanšs (jauns mačs)</button>
+        <button class="btn primary" disabled={app.busy} onclick={rematch}>Revanšs (jauns mačs)</button>
       {/if}
-      <button class="btn small" onclick={copyLink}>📋 Kopēt saiti uz šo maču</button>
+      <button class="btn small" onclick={copyLink}>Kopēt saiti uz šo maču</button>
     </div>
 
     <details class="demo">

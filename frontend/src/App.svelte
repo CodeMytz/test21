@@ -28,7 +28,7 @@
     <p class="small muted">
       Tikai Ethereum Sepolia testtīkls un testa ETH. Neizmanto īstus līdzekļus.
       {#if app.cfg?.address}
-        <a href="{EXPLORER}/address/{app.cfg.address}" target="_blank" rel="noopener">Līgums Etherscan ↗</a> ·
+        <a href="{EXPLORER}/address/{app.cfg.address}" target="_blank" rel="noopener">Līgums Etherscan</a> ·
       {/if}
       <a href="./Game.sol" target="_blank" rel="noopener">Game.sol</a>
     </p>

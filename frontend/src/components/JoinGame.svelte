@@ -21,5 +21,5 @@
       <li class="muted small">Pašlaik nav gaidošu maču.</li>
     {/each}
   </ul>
-  <button class="btn small" onclick={loadLists}>↻ Atjaunot sarakstus</button>
+  <button class="btn small" onclick={loadLists}>Atjaunot sarakstus</button>
 </section>

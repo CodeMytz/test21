@@ -6,10 +6,10 @@
 <ol class="history">
   {#each app.history as h, i (h.hash + i)}
     <li>
-      {short(h.player)} {same(h.player, app.account) ? "(tu) " : ""}+{h.amount} → {h.newTotal}
-      <a href={txUrl(h.hash)} target="_blank" rel="noopener">tx ↗</a>
+      {short(h.player)} {same(h.player, app.account) ? "(tu) " : ""}+{h.amount} = {h.newTotal}
+      <a href={txUrl(h.hash)} target="_blank" rel="noopener">tx</a>
       {#if app.game && h.newTotal === app.game.target}
-        <span class="fin"> 🏁 uzvara</span>
+        <span class="fin">uzvara</span>
       {/if}
     </li>
   {:else}
