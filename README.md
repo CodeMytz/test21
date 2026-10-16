@@ -1,4 +1,4 @@
-# ⚔️ Sasniedz 21 — Blockchain duelis (1. grupa)
+# Sasniedz 21 — Blockchain duelis (1. grupa)
 ## Site : https://test21-5137.onrender.com/
 Divu spēlētāju spēle uz **Ethereum Sepolia** testtīkla. Spēlētāji pārmaiņus pieskaita kopējai summai **1, 2 vai 3**.
 Uzvar tas, kurš summu **precīzi** sasniedz līdz mērķim (15–31, parasti 21). Gājiens, kas summu pārsniegtu virs mērķa, tiek noraidīts.

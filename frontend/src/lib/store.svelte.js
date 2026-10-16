@@ -123,6 +123,18 @@ async function ensureSepolia() {
     });
     return true;
   } catch (err) {
+    if (isPending(err)) {
+      setBanner("MetaMask pieprasījums jau ir atvērts. Apstiprini tīkla maiņu uz Sepolia MetaMask paplašinājumā.", false);
+      const end = Date.now() + 120000;
+      while (Date.now() < end) {
+        try {
+          const id = await window.ethereum.request({ method: "eth_chainId" });
+          if (BigInt(id) === SEPOLIA_ID) return true;
+        } catch (_) {}
+        await sleep(1500);
+      }
+      return false;
+    }
     if (err && err.code === 4902) {
       try {
         await window.ethereum.request({
@@ -146,11 +158,42 @@ async function ensureSepolia() {
   }
 }
 
+const isPending = (e) => e?.code === -32002 || /already pending/i.test(e?.message || "");
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function waitForAccounts(timeoutMs = 120000) {
+  const end = Date.now() + timeoutMs;
+  while (Date.now() < end) {
+    try {
+      const accs = await window.ethereum.request({ method: "eth_accounts" });
+      if (accs && accs.length) return accs;
+    } catch (_) {}
+    await sleep(1500);
+  }
+  return [];
+}
+
+async function requestAccounts() {
+  const existing = await window.ethereum.request({ method: "eth_accounts" });
+  if (existing && existing.length) return existing;
+  try {
+    return await window.ethereum.request({ method: "eth_requestAccounts" });
+  } catch (e) {
+    if (!isPending(e)) throw e;
+    setBanner("MetaMask pieprasījums jau ir atvērts. Atver MetaMask paplašinājumu un apstiprini to, un pieslēgšanās turpināsies automātiski.", false);
+    const accs = await waitForAccounts();
+    if (!accs.length) {
+      const err = new Error("MetaMask pieprasījums netika apstiprināts. Atver MetaMask, apstiprini vai noraidi to un mēģini vēlreiz.");
+      err.userMessage = true;
+      throw err;
+    }
+    return accs;
+  }
+}
+
 let connecting = null;
 
 export function connect() {
-  // Only one wallet request at a time: MetaMask rejects a second
-  // eth_requestAccounts / wallet_requestPermissions while one is pending.
   if (connecting) return connecting;
   connecting = doConnect().finally(() => {
     connecting = null;
@@ -165,7 +208,7 @@ async function doConnect() {
   }
   if (!app.cfg?.address || !abi) return;
   try {
-    await window.ethereum.request({ method: "eth_requestAccounts" });
+    await requestAccounts();
     const ok = await ensureSepolia();
     if (!ok) {
       app.netText = "Nepareizs tīkls";
@@ -193,11 +236,7 @@ async function doConnect() {
     await loadLists();
     if (app.currentId) await refreshGame(true);
   } catch (e) {
-    if (e?.code === -32002 || /already pending/i.test(e?.message || "")) {
-      setBanner("MetaMask pieprasījums jau ir atvērts. Atver MetaMask paplašinājumu un apstiprini vai noraidi to.", true);
-    } else {
-      setBanner(prettyError(e), true);
-    }
+    setBanner(e?.userMessage ? e.message : prettyError(e), true);
   }
 }
 
